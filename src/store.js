@@ -1,5 +1,7 @@
 import { writable, derived } from 'svelte/store';
 
+export const apiURL = writable('http://kruettlip:5000/api');
+
 function summarize(players) {
     let result = [];
     players.forEach(p => {

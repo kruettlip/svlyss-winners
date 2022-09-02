@@ -12,12 +12,12 @@
         DataTableBody,
     } from "svelte-materialify";
     import { mdiEyeOff, mdiEye, mdiPlus, mdiMinus } from "@mdi/js";
-    import { sessionKey, currentMonth } from "./store.js";
+    import { sessionKey, currentMonth, apiURL } from "./store.js";
     import { onMount } from "svelte";
 
     onMount(async () => {
         if (sessionKey !== "") {
-            await fetch("http://localhost:5000/api/auth", {
+            await fetch(`${$apiURL}/auth`, {
                 method: "POST",
                 body: JSON.stringify({
                     sessionKey: $sessionKey,
@@ -55,7 +55,7 @@
     }
 
     async function tryLogin() {
-        await fetch("http://localhost:5000/api/login", {
+        await fetch(`${$apiURL}/login`, {
             method: "POST",
             body: JSON.stringify({
                 username,
@@ -75,7 +75,7 @@
 
     async function save() {
         console.log(players);
-        await fetch("http://localhost:5000/api/update", {
+        await fetch(`${$apiURL}/update`, {
             method: "POST",
             body: JSON.stringify({
                 sessionKey: $sessionKey,

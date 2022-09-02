@@ -7,11 +7,11 @@
         DataTableBody,
     } from "svelte-materialify";
     import { onMount } from "svelte";
-    import { currentMonth, apiData } from "./store.js";
+    import { currentMonth, apiData, apiURL } from "./store.js";
 
     onMount(async () => {
         fetch(
-            "http://localhost:5000/api/all"
+            `${$apiURL}/all`
         )
             .then((response) => response.json())
             .then((data) => {
