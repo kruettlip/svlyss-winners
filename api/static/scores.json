@@ -1,0 +1,36 @@
+[
+    {
+        "monthIndex": 10,
+        "players": [
+            {
+                "id": 1,
+                "firstname": "Philippe",
+                "lastname": "Kr\u00fcttli",
+                "points": 0
+            },
+            {
+                "id": 2,
+                "firstname": "Jesy",
+                "lastname": "Teverajah",
+                "points": 0
+            }
+        ]
+    },
+    {
+        "monthIndex": 9,
+        "players": [
+            {
+                "firstname": "Philippe",
+                "id": 1,
+                "lastname": "Kr\u00fcttli",
+                "points": 2
+            },
+            {
+                "firstname": "Jesy",
+                "id": 2,
+                "lastname": "Teverajah",
+                "points": 1
+            }
+        ]
+    }
+]

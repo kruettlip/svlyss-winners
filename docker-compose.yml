@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  svlyss-winners-api:
+    build: ./api
+    container_name: svlyss-winners-api
+    networks:
+      - svlyss
+    restart: always
+    ports:
+      - "5000:5000"
+  svlyss-winners-ui:
+    build: ./
+    container_name: svlyss-winners-ui
+    depends_on:
+      - svlyss-winners-api
+    networks:
+      - svlyss
+    restart: always
+    ports:
+      - "80:80"
+networks:
+  svlyss: {}
