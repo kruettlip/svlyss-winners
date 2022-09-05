@@ -1,6 +1,6 @@
 import { writable, derived } from 'svelte/store';
 
-export const apiURL = writable('http://kruettlip:5000/api');
+export const apiURL = writable('http://localhost:5000/api');
 
 function summarize(players) {
     let result = [];
@@ -23,7 +23,7 @@ function summarize(players) {
 }
 
 export const apiData = writable([]);
-export const sessionKey = writable({});
+export const sessionKey = writable("");
 
 export const firstRound = derived(apiData, ($apiData) => {
     if ($apiData.length > 0) {

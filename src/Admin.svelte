@@ -12,12 +12,12 @@
         DataTableBody,
     } from "svelte-materialify";
     import { mdiEyeOff, mdiEye, mdiPlus, mdiMinus } from "@mdi/js";
-    import { sessionKey, currentMonth, apiURL } from "./store.js";
+    import { sessionKey, currentMonth, apiURL, apiData } from "./store.js";
     import { onMount } from "svelte";
     import Notification from "./Notification.svelte";
 
     onMount(() => {
-        if (sessionKey !== "") {
+        if ($sessionKey) {
             fetch(`${$apiURL}/auth`, {
                 method: "POST",
                 body: JSON.stringify({
@@ -38,6 +38,18 @@
                     return [];
                 });
         }
+
+        fetch(`${$apiURL}/all`)
+            .then((response) => response.json())
+            .then((data) => {
+                apiData.set(data);
+                players = $currentMonth;
+            })
+            .catch((err) => {
+                error = true;
+                errorText = err.message;
+                return [];
+            });
     });
 
     const monthString = new Date().toLocaleString("de", { month: "long" });
@@ -50,14 +62,20 @@
     let error = false;
     let errorText = "";
 
-    const players = $currentMonth;
+    let players = $currentMonth;
 
     function increment(playerId) {
-        players[playerId - 1].points += 1;
+        let player = players.find((p) => p.id === playerId);
+        if (player) {
+            players[players.indexOf(player)].points += 1;
+        }
     }
 
     function decrement(playerId) {
-        players[playerId - 1].points -= 1;
+        let player = players.find((p) => p.id === playerId);
+        if (player) {
+            players[players.indexOf(player)].points -= 1;
+        }
     }
 
     function tryLogin() {
@@ -71,11 +89,13 @@
             .then((response) => {
                 if (response.status === 403)
                     throw new Error("Falsche Login-Daten");
-                response.text();
+                return response.text();
             })
             .then((data) => {
-                sessionKey.set(data);
-                loggedIn = true;
+                if (data != "") {
+                    sessionKey.set(data);
+                    loggedIn = true;
+                }
             })
             .catch((err) => {
                 error = true;
