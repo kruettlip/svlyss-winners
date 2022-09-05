@@ -11,7 +11,7 @@
         DataTableCell,
         DataTableBody,
     } from "svelte-materialify";
-    import { mdiEyeOff, mdiEye, mdiPlus, mdiMinus } from "@mdi/js";
+    import { mdiEyeOff, mdiEye, mdiPlus, mdiMinus, mdiAccountStar } from "@mdi/js";
     import { sessionKey, currentMonth, apiURL, apiData } from "./store.js";
     import { onMount } from "svelte";
     import Notification from "./Notification.svelte";
@@ -64,10 +64,10 @@
 
     let players = $currentMonth;
 
-    function increment(playerId) {
+    function increment(playerId, increment = 1) {
         let player = players.find((p) => p.id === playerId);
         if (player) {
-            players[players.indexOf(player)].points += 1;
+            players[players.indexOf(player)].points += increment;
         }
     }
 
@@ -143,6 +143,7 @@
             <DataTableRow>
                 <DataTableCell>Name</DataTableCell>
                 <DataTableCell numeric>Punkte</DataTableCell>
+                <DataTableCell>Joker</DataTableCell>
             </DataTableRow>
         </DataTableHead>
         <DataTableBody>
@@ -164,6 +165,15 @@
                             on:click={decrement(player.id)}
                         >
                             <Icon path={mdiMinus} />
+                        </Button>
+                    </DataTableCell>
+                    <DataTableCell>
+                        <Button
+                            fab
+                            size="small"
+                            on:click={increment(player.id, 0.5)}
+                        >
+                            <Icon path={mdiAccountStar} />
                         </Button>
                     </DataTableCell>
                 </DataTableRow>
