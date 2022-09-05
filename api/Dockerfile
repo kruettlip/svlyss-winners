@@ -9,5 +9,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 COPY static/ .
+COPY certs/ .
 
-CMD [ "python3", "-m" , "flask", "--app", "api", "run", "--host=0.0.0.0"]
+CMD [ "python3", "-m" , "flask", "--app", "api", "run", "--host=0.0.0.0", "--cert=certs/fullchain.pem", "--key=certs/fullchain.pem"]
