@@ -11,4 +11,4 @@ COPY . .
 COPY static/ .
 COPY certs/ .
 
-CMD [ "python3", "-m" , "flask", "--app", "api", "run", "--host=0.0.0.0", "--cert=certs/fullchain.pem", "--key=certs/fullchain.pem"]
+CMD [ "python3", "-m" , "flask", "--app", "api", "run", "--host=0.0.0.0", "--cert=certs/fullchain.pem", "--key=certs/privkey.pem"]
