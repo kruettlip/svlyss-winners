@@ -20,6 +20,8 @@ services:
     restart: always
     ports:
       - "80:80"
+    volumes:
+      - /etc/letsencrypt/live/svl.kruettlip.ch:/etc/nginx/certs
 networks:
   svlyss: {}
 volumes:
