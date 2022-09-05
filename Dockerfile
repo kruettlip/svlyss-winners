@@ -11,3 +11,4 @@ RUN npm run build
 FROM nginx:1.19-alpine
 COPY --from=build /app/public /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY /etc/letsencrypt/live/svl.kruettlip.ch/ /etc/nginx/certs/

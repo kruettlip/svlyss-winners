@@ -19,7 +19,7 @@ services:
       - svlyss
     restart: always
     ports:
-      - "80:80"
+      - "443:443"
     volumes:
       - /etc/letsencrypt/live/svl.kruettlip.ch:/etc/nginx/certs
 networks:
