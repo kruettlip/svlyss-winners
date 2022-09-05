@@ -8,6 +8,8 @@ services:
     restart: always
     ports:
       - "5000:5000"
+    volumes:
+      - data:/python-docker
   svlyss-winners-ui:
     build: ./
     container_name: svlyss-winners-ui
@@ -20,3 +22,5 @@ services:
       - "80:80"
 networks:
   svlyss: {}
+volumes:
+  data:
