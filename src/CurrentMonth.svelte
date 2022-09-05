@@ -8,15 +8,13 @@
     } from "svelte-materialify";
     import { onMount } from "svelte";
     import { currentMonth, apiData, apiURL } from "./store.js";
-import Notification from "./Notification.svelte";
+    import Notification from "./Notification.svelte";
 
     let error = false;
     let errorText = "";
 
     onMount(() => {
-        fetch(
-            `${$apiURL}/all`
-        )
+        fetch(`${$apiURL}/all`)
             .then((response) => response.json())
             .then((data) => {
                 apiData.set(data);
