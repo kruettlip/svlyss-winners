@@ -5,6 +5,7 @@ import json
 import os
 import string
 import random
+import shutil
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 data_file = os.path.join(basedir, 'static/scores.json')
@@ -64,6 +65,7 @@ def update():
         scores = json.load(scoresfile)
         otherMonths = [x for x in scores if x['monthIndex'] != datetime.now().month]
         otherMonths.append(month)
+    shutil.copy2(data_file, os.path.join(basedir, f'static/scores_{datetime.now().strftime("%Y-%m-%dT%H:%M:%S")}.json'))
     with open(data_file, mode="w", encoding="utf-8") as scoresfile:
         json.dump(otherMonths, scoresfile)
         return month, 200
