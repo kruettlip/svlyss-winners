@@ -8,8 +8,12 @@
     } from "svelte-materialify";
     import { onMount } from "svelte";
     import { currentMonth, apiData, apiURL } from "./store.js";
+import Notification from "./Notification.svelte";
 
-    onMount(async () => {
+    let error = false;
+    let errorText = "";
+
+    onMount(() => {
         fetch(
             `${$apiURL}/all`
         )
@@ -17,8 +21,9 @@
             .then((data) => {
                 apiData.set(data);
             })
-            .catch((error) => {
-                console.log(error);
+            .catch((err) => {
+                error = true;
+                errorText = err.message;
                 return [];
             });
     });
@@ -32,8 +37,7 @@
     <DataTableHead>
         <DataTableRow>
             <DataTableCell numeric>Rang</DataTableCell>
-            <DataTableCell>Vorname</DataTableCell>
-            <DataTableCell>Nachname</DataTableCell>
+            <DataTableCell>Name</DataTableCell>
             <DataTableCell numeric>Punkte</DataTableCell>
         </DataTableRow>
     </DataTableHead>
@@ -41,16 +45,19 @@
         {#each $currentMonth as player, index}
             <DataTableRow>
                 <DataTableCell numeric>{index + 1}</DataTableCell>
-                <DataTableCell>{player.firstname}</DataTableCell>
-                <DataTableCell>{player.lastname}</DataTableCell>
+                <DataTableCell>{player.name}</DataTableCell>
                 <DataTableCell numeric>{player.points}</DataTableCell>
             </DataTableRow>
         {/each}
     </DataTableBody>
 </DataTable>
+<Notification error bind:active={error}>{errorText}</Notification>
 
 <style>
     h4 {
         margin-bottom: 20px;
+    }
+    :global(.s-tbl-cell) {
+        height: 40px !important;
     }
 </style>

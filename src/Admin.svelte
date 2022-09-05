@@ -14,10 +14,11 @@
     import { mdiEyeOff, mdiEye, mdiPlus, mdiMinus } from "@mdi/js";
     import { sessionKey, currentMonth, apiURL } from "./store.js";
     import { onMount } from "svelte";
+    import Notification from "./Notification.svelte";
 
-    onMount(async () => {
+    onMount(() => {
         if (sessionKey !== "") {
-            await fetch(`${$apiURL}/auth`, {
+            fetch(`${$apiURL}/auth`, {
                 method: "POST",
                 body: JSON.stringify({
                     sessionKey: $sessionKey,
@@ -26,11 +27,13 @@
                 .then((response) => response.text())
                 .then((data) => {
                     if (data != "") {
+                        sessionKey.set(data);
                         loggedIn = true;
                     }
                 })
-                .catch((error) => {
-                    console.log(error);
+                .catch((err) => {
+                    error = true;
+                    errorText = err.message;
                     loggedIn = false;
                     return [];
                 });
@@ -43,6 +46,9 @@
     let loggedIn = false;
     let username = "";
     let password = "";
+    let savedSuccessfully = false;
+    let error = false;
+    let errorText = "";
 
     const players = $currentMonth;
 
@@ -54,57 +60,75 @@
         players[playerId - 1].points -= 1;
     }
 
-    async function tryLogin() {
-        await fetch(`${$apiURL}/login`, {
+    function tryLogin() {
+        fetch(`${$apiURL}/login`, {
             method: "POST",
             body: JSON.stringify({
                 username,
                 password,
             }),
         })
-            .then((response) => response.text())
+            .then((response) => {
+                if (response.status === 403)
+                    throw new Error("Falsche Login-Daten");
+                response.text();
+            })
             .then((data) => {
                 sessionKey.set(data);
                 loggedIn = true;
             })
-            .catch((error) => {
-                console.log(error);
+            .catch((err) => {
+                error = true;
+                errorText = err.message;
                 return [];
             });
     }
 
-    async function save() {
-        console.log(players);
-        await fetch(`${$apiURL}/update`, {
+    function save() {
+        fetch(`${$apiURL}/update`, {
             method: "POST",
             body: JSON.stringify({
                 sessionKey: $sessionKey,
                 players: players,
             }),
         })
-            .then((response) => response.json())
-            .catch((error) => {
-                console.log(error);
+            .then((response) => {
+                if (response.status === 403)
+                    throw new Error("Falsche Login-Daten");
+                savedSuccessfully = true;
+            })
+            .catch((err) => {
+                error = true;
+                errorText = err.message;
                 return [];
             });
     }
+
+    function onKeyDown(e) {
+        switch (e.keyCode) {
+            case 13:
+                tryLogin();
+                break;
+            default:
+                break;
+        }
+    }
 </script>
 
+<Notification error bind:active={error}>{errorText}</Notification>
 {#if loggedIn}
     <h4>Aktueller Monat: {monthString}</h4>
     <DataTable>
         <DataTableHead>
             <DataTableRow>
-                <DataTableCell>Vorname</DataTableCell>
-                <DataTableCell>Nachname</DataTableCell>
+                <DataTableCell>Name</DataTableCell>
                 <DataTableCell numeric>Punkte</DataTableCell>
             </DataTableRow>
         </DataTableHead>
         <DataTableBody>
             {#each players as player}
                 <DataTableRow>
-                    <DataTableCell>{player.firstname}</DataTableCell>
-                    <DataTableCell>{player.lastname}</DataTableCell>
+                    <DataTableCell>{player.name}</DataTableCell>
                     <DataTableCell numeric>
                         <Button
                             fab
@@ -130,21 +154,30 @@
     <Button rounded class="indigo darken-4 save-button" on:click={save}>
         <span class="white-text">Speichern</span>
     </Button>
+    <Notification success bind:active={savedSuccessfully}
+        >Erfolgreich gespeichert.</Notification
+    >
 {:else}
-    <div class="login-form">
+    <div class="login-form" on:keydown={onKeyDown}>
         <Row>
-            <Col>
-                <h4 class="title">Login</h4>
-                <TextField dense rounded outlined bind:value={username}
-                    >Benutzername</TextField
+            <Col class="flex-col">
+                <h4 class="full-width">Login</h4>
+                <TextField
+                    dense
+                    rounded
+                    outlined
+                    bind:value={username}
+                    class="full-width"
                 >
-                <br />
+                    Benutzername
+                </TextField>
                 <TextField
                     type={show ? "text" : "password"}
                     dense
                     rounded
                     outlined
                     bind:value={password}
+                    class="full-width"
                 >
                     Passwort
                     <div
@@ -156,7 +189,6 @@
                         <Icon path={show ? mdiEyeOff : mdiEye} />
                     </div>
                 </TextField>
-                <br />
                 <Button
                     rounded
                     class="indigo darken-4 login-button"
@@ -173,22 +205,26 @@
     .login-form {
         border: solid 1px darkgray;
         border-radius: 10px;
-        max-width: 500px;
+        max-width: 90vw;
         padding: 30px;
+    }
+    :global(.flex-col) {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-end;
     }
     :global(.login-button) {
         width: 100px;
-        position: relative;
-        left: 335px;
     }
     :global(.save-button) {
         margin-top: 20px;
         width: 120px;
     }
-    .title {
-        margin-bottom: 30px;
+    :global(.full-width) {
+        width: 100%;
     }
-    h4 {
-        margin-bottom: 20px;
+    :global(th.s-tbl-cell) {
+        text-align: left !important;
     }
 </style>

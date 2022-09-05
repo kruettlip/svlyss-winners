@@ -15,7 +15,11 @@ function summarize(players) {
             result.push(p);
         }
     });
-    return result.sort((p1, p2) => p2.points - p1.points);
+    return result.sort((p1, p2) => {
+        if (p1.points === p1.points)
+            return p1.name.localeCompare(p2.name);
+        return p2.points - p1.points;
+    });
 }
 
 export const apiData = writable([]);
@@ -40,7 +44,11 @@ export const secondRound = derived(apiData, ($apiData) => {
 export const currentMonth = derived(apiData, ($apiData) => {
     let current = $apiData.filter(m => m.monthIndex == (new Date().getMonth() + 1));
     if (current.length > 0) {
-        return current[0].players.sort((p1, p2) => p2.points - p1.points);
+        return current[0].players.sort((p1, p2) => {
+            if (p1.points === p1.points)
+                return p1.name.localeCompare(p2.name);
+            return p2.points - p1.points;
+        });
     }
     return [];
 });

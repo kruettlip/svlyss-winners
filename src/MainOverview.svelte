@@ -29,8 +29,7 @@
             <DataTableHead>
                 <DataTableRow>
                     <DataTableCell numeric>Rang</DataTableCell>
-                    <DataTableCell>Vorname</DataTableCell>
-                    <DataTableCell>Nachname</DataTableCell>
+                    <DataTableCell>Name</DataTableCell>
                     <DataTableCell numeric>Punkte</DataTableCell>
                 </DataTableRow>
             </DataTableHead>
@@ -38,8 +37,7 @@
                 {#each $firstRound as player, index}
                     <DataTableRow>
                         <DataTableCell numeric>{index + 1}</DataTableCell>
-                        <DataTableCell>{player.firstname}</DataTableCell>
-                        <DataTableCell>{player.lastname}</DataTableCell>
+                        <DataTableCell>{player.name}</DataTableCell>
                         <DataTableCell numeric>{player.points}</DataTableCell>
                     </DataTableRow>
                 {/each}
@@ -51,8 +49,7 @@
             <DataTableHead>
                 <DataTableRow>
                     <DataTableCell numeric>Rang</DataTableCell>
-                    <DataTableCell>Vorname</DataTableCell>
-                    <DataTableCell>Nachname</DataTableCell>
+                    <DataTableCell>Name</DataTableCell>
                     <DataTableCell numeric>Punkte</DataTableCell>
                 </DataTableRow>
             </DataTableHead>
@@ -60,8 +57,7 @@
                 {#each $secondRound as player, index}
                     <DataTableRow>
                         <DataTableCell numeric>{index + 1}</DataTableCell>
-                        <DataTableCell>{player.firstname}</DataTableCell>
-                        <DataTableCell>{player.lastname}</DataTableCell>
+                        <DataTableCell>{player.name}</DataTableCell>
                         <DataTableCell numeric>{player.points}</DataTableCell>
                     </DataTableRow>
                 {/each}

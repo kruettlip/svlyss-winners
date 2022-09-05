@@ -9,19 +9,29 @@
         ListItemGroup,
         ListItem,
     } from "svelte-materialify";
-    import { mdiMenu, mdiInvertColors, mdiCalendarToday, mdiFormatListNumbered, mdiAccountKey } from "@mdi/js";
+    import {
+        mdiMenu,
+        mdiInvertColors,
+        mdiCalendarToday,
+        mdiFormatListNumbered,
+        mdiAccountKey,
+    } from "@mdi/js";
     import { createEventDispatcher } from "svelte";
     import { Link } from "svelte-navigator";
 
     const dispatch = createEventDispatcher();
 
     let active = false;
-    
+
     const navItems = [
-    { text: 'Aktueller Monat', icon: mdiCalendarToday, path: '/' },
-    { text: 'Gesamtübersicht', icon: mdiFormatListNumbered, path: '/overview' },
-    { text: 'Admin', icon: mdiAccountKey, path: '/admin' },
-  ];
+        { text: "Aktueller Monat", icon: mdiCalendarToday, path: "/" },
+        {
+            text: "Gesamtübersicht",
+            icon: mdiFormatListNumbered,
+            path: "/overview",
+        },
+        { text: "Admin", icon: mdiAccountKey, path: "/admin" },
+    ];
 
     function toggleNavigation() {
         active = !active;
@@ -39,13 +49,15 @@
                 fab
                 depressed
                 on:click={toggleNavigation}
-                class="indigo darken-4">
+                class="indigo darken-4"
+            >
                 <Icon path={mdiMenu} class="white-text" />
             </Button>
         </div>
-        <span slot="title" class="white-text">
-            Zwöi - Rangliste
-        </span>
+        <div class="flex-row" slot="title">
+            <img src="/favicon.png" height="35px" alt=""/>
+            <span class="white-text"> Zwöi - Rangliste </span>
+        </div>
         <Button on:click={toggleTheme} icon class="white-text right">
             <Icon path={mdiInvertColors} />
         </Button>
@@ -53,18 +65,18 @@
     <NavigationDrawer style="position: relative" {active}>
         <List nav dense>
             <ListItemGroup>
-              {#each navItems as item}
-                <Link to={item.path} on:click={toggleNavigation}>
-                    <ListItem>
-                    <span slot="prepend">
-                        <Icon path={item.icon} />
-                    </span>
-                    {item.text}
-                    </ListItem>
-                </Link>
-              {/each}
+                {#each navItems as item}
+                    <Link to={item.path} on:click={toggleNavigation}>
+                        <ListItem>
+                            <span slot="prepend">
+                                <Icon path={item.icon} />
+                            </span>
+                            {item.text}
+                        </ListItem>
+                    </Link>
+                {/each}
             </ListItemGroup>
-          </List>
+        </List>
     </NavigationDrawer>
     <Overlay {active} absolute on:click={toggleNavigation} index={1} />
 </div>
@@ -77,10 +89,16 @@
     :global(button) {
         margin: 0;
     }
-    :global(.s-overlay), :global(.s-navigation-drawer) {
+    :global(.s-overlay),
+    :global(.s-navigation-drawer) {
         height: 100vh !important;
     }
     :global(AppBar) {
         margin-bottom: -10px;
+    }
+    :global(.flex-row) {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 </style>
